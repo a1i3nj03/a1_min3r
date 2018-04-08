@@ -759,7 +759,7 @@ void quark_skein512_gpu_hash_64(const uint32_t threads, uint64_t* __restrict__ g
 
 __host__
 //void quark_skein512_cpu_hash_64(int thr_id,uint32_t threads, uint32_t *d_nonceVector, uint32_t *d_hash)
-void quark_skein512_cpu_hash_64(int thr_id, const uint32_t threads, uint32_t *d_hash, int order)
+void quark_skein512_cpu_hash_64(int thr_id, const uint32_t threads, uint32_t *d_hash)
 {
 	uint32_t tpb = TPB52;
 	int dev_id = device_map[thr_id];

@@ -545,7 +545,7 @@ void x11_shavite512_gpu_hash_80(uint32_t threads, uint32_t startNounce, uint64_t
 	#else
 	#error "Not set up for this"
 	#endif
-	//	__threadfence_block();
+//	__threadfence_block();
 
 	const uint32_t thread = (blockDim.x * blockIdx.x + threadIdx.x);
 

@@ -713,7 +713,7 @@ void x11_simd512_cpu_free(int thr_id)
 }
 
 __host__
-void x11_simd512_cpu_hash_64(int thr_id, uint32_t threads, uint32_t *d_hash, int order)
+void x11_simd512_cpu_hash_64(int thr_id, uint32_t threads, uint32_t *d_hash)
 {
 	const uint32_t threadsperblock = TPB;
 	int dev_id = device_map[thr_id];
@@ -733,5 +733,5 @@ void x11_simd512_cpu_hash_64(int thr_id, uint32_t threads, uint32_t *d_hash, int
 
 	x11_simd512_gpu_final_64 <<<grid, block>>> (threads, d_hash, d_temp4[thr_id], d_state[thr_id]);
 
-	//MyStreamSynchronize(NULL, order, thr_id);
+//	MyStreamSynchronize(NULL, order, thr_id);
 }

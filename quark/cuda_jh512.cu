@@ -329,7 +329,7 @@ void quark_jh512_gpu_hash_64(const uint32_t threads, uint32_t* g_hash)
 }
 
 __host__
-void quark_jh512_cpu_hash_64(int thr_id, uint32_t threads, uint32_t *d_hash, int order)
+void quark_jh512_cpu_hash_64(int thr_id, uint32_t threads, uint32_t *d_hash)
 {
 	const uint32_t threadsperblock = 256;
 	dim3 grid((threads + threadsperblock-1)/threadsperblock);

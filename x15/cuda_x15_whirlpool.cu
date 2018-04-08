@@ -725,7 +725,7 @@ void x15_whirlpool_gpu_hash_64(uint32_t threads, uint64_t *g_hash)
 		*(uint2x4*)&g_hash[(thread<<3)+ 4] = *(uint2x4*)&hash[ 4];
 	}
 }
-
+/*
 __host__
 static void x15_whirlpool_cpu_hash_64(int thr_id, uint32_t threads, uint32_t *d_hash)
 {
@@ -734,9 +734,9 @@ static void x15_whirlpool_cpu_hash_64(int thr_id, uint32_t threads, uint32_t *d_
 
 	x15_whirlpool_gpu_hash_64 <<<grid, block>>> (threads, (uint64_t*)d_hash);
 }
-
+*/
 __host__
-void x15_whirlpool_cpu_hash_64(int thr_id, uint32_t threads, uint32_t *d_hash, int order)
+void x15_whirlpool_cpu_hash_64(int thr_id, uint32_t threads, uint32_t *d_hash)
 {
 	dim3 grid((threads + TPB64 - 1) / TPB64);
 	dim3 block(TPB64);
@@ -744,4 +744,3 @@ void x15_whirlpool_cpu_hash_64(int thr_id, uint32_t threads, uint32_t *d_hash, i
 	x15_whirlpool_gpu_hash_64 << <grid, block >> > (threads, (uint64_t*)d_hash);
 	//	x15_whirlpool_cpu_hash_64(thr_id, threads, d_hash);
 }
-

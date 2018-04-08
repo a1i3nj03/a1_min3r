@@ -81,18 +81,18 @@ static __thread uint32_t s_ntime = UINT32_MAX;
 static __thread bool s_implemented = false;
 static __thread char hashOrder[HASH_FUNC_COUNT + 1] = { 0 };
 
-static void(*pAlgo64[16])(int, uint32_t, uint32_t*, int) =
+static void(*pAlgo64[16])(int, uint32_t, uint32_t*) =
 {
 	quark_blake512_cpu_hash_64,
 	quark_bmw512_cpu_hash_64,
-	quark_groestl512_cpu_hash_64,//! optimizing, so -1 flag used to run special code (if GPU is new enough)
+	quark_groestl512_cpu_hash_64,
 	quark_jh512_cpu_hash_64,
 	quark_keccak512_cpu_hash_64,
 	quark_skein512_cpu_hash_64,
 	x11_luffa512_cpu_hash_64_alexis,
 	x11_cubehash512_cpu_hash_64,
 	x11_shavite512_cpu_hash_64_alexis,
-	x11_simd512_cpu_hash_64, //! uses order for cpu wait
+	x11_simd512_cpu_hash_64,
 	x11_echo512_cpu_hash_64_alexis,
 	x13_hamsi512_cpu_hash_64_alexis,
 	x13_fugue512_cpu_hash_64_alexis,
@@ -140,7 +140,7 @@ SHA512,f
 */
 
 //void quark_blake512_cpu_hash_64(thr_id, throughput, pdata[19], NULL, d_hash[thr_id], 0);
-
+#if 0
 static void run_x16r_rounds(const uint32_t* prevblock, int thr_id, uint32_t threads, uint32_t startNounce, uint32_t* d_hash)
 {
 	// big toys for big boys
@@ -161,7 +161,7 @@ static void run_x16r_rounds(const uint32_t* prevblock, int thr_id, uint32_t thre
 	pAlgo64[(*(uint64_t*)prevblock >> 60 - (14* 4)) & 0x0f](thr_id, threads, d_hash,14);
 	pAlgo64[(*(uint64_t*)prevblock >> 60 - (15* 4)) & 0x0f](thr_id, threads, d_hash,15);
 }
-
+#endif
 static void getAlgoString(const uint32_t* prevblock, char *output)
 {
 	for (int i = 0; i < 16; i++)
@@ -587,27 +587,22 @@ extern "C" int scanhash_x16r(int thr_id, struct work* work, uint32_t max_nonce, 
 		}
 */		
 		if (work_restart[thr_id].restart) return -127;
-
 		pAlgo80[(*(uint64_t*)&endiandata[1] >> 60 - (0 * 4)) & 0x0f](thr_id, throughput, pdata[19], d_hash[thr_id]);
-		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (1 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id], 1);
-		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (2 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id], 2);
-		if (work_restart[thr_id].restart) return -127;
-		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (3 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id], 3);
-		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (4 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id], 4);
-		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (5 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id], 5);
-		if (work_restart[thr_id].restart) return -127;
-		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (6 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id], 6);
-		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (7 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id], 7);
-		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (8 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id], 8);
-		if (work_restart[thr_id].restart) return -127;
-		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (9 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id], 9);
-		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (10 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id], 10);
-		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (11 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id], 11);
-		if (work_restart[thr_id].restart) return -127;
-		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (12 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id], 12);
-		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (13 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id], 13);
-		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (14 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id], 14);
-		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (15 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id], 15);
+		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (1 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id]);
+		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (2 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id]);
+		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (3 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id]);
+		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (4 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id]);
+		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (5 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id]);
+		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (6 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id]);
+		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (7 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id]);
+		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (8 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id]);
+		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (9 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id]);
+		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (10 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id]);
+		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (11 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id]);
+		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (12 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id]);
+		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (13 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id]);
+		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (14 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id]);
+		pAlgo64[(*(uint64_t*)&endiandata[1] >> 60 - (15 * 4)) & 0x0f](thr_id, throughput, d_hash[thr_id]);
 		if (work_restart[thr_id].restart) return -127;
 
 //		run_x16r_rounds(&endiandata[1], thr_id, throughput, pdata[19], d_hash[thr_id]);

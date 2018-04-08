@@ -71,7 +71,7 @@ __device__ int  __ffs(int x);
 __device__ __forceinline__
 static bool hashbelowtarget(const uint32_t *const __restrict__ hash, const uint32_t *const __restrict__ target)
 {
-#if 0
+#if 1
 	int le =
 		((hash[0] < target[0]) << 7) | ((hash[1] < target[1]) << 6) | ((hash[2] < target[2]) << 5) | ((hash[3] < target[3]) << 4) |
 		((hash[4] < target[4]) << 3) | ((hash[5] < target[5]) << 2) | ((hash[6] < target[6]) << 1) | (hash[7] < target[7]) | 0x100;
@@ -211,7 +211,7 @@ uint32_t cuda_check_hash(int thr_id, uint32_t threads, uint32_t startNounce, uin
 	}
 
 	cuda_checkhash_64 <<<grid, block>>> (threads, startNounce, d_inputHash, d_resNonces[thr_id]);
-	cudaThreadSynchronize();
+//	cudaThreadSynchronize();
 
 	cudaMemcpy(h_resNonces[thr_id], d_resNonces[thr_id], sizeof(uint32_t), cudaMemcpyDeviceToHost);
 	return h_resNonces[thr_id][0];

@@ -235,7 +235,7 @@ void quark_blake512_gpu_hash_80(uint32_t threads, uint32_t startNounce, void *ou
 #endif
 
 __host__
-void quark_blake512_cpu_hash_64(int thr_id, uint32_t threads, uint32_t *d_outputHash, int order)
+void quark_blake512_cpu_hash_64(int thr_id, uint32_t threads, uint32_t *d_outputHash)
 {
 #ifdef SP_KERNEL
 	int dev_id = device_map[thr_id];
