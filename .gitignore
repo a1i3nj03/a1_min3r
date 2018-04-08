@@ -51,7 +51,10 @@ x64/Release/
 .loadpath
 .cproject
 .buildpath
-.ptx
+
+compat/curl-for-windows/
+
+*.ptx
 *.i
 *.ii
 *.gpu
